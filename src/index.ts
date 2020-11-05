@@ -4,20 +4,21 @@ import * as bull from 'bull';
 export interface Options {
   promClient?: any;
   interval?: number;
+  metricsPrefix?: string;
 }
 
 export function init(opts: Options) {
-  const { interval = 60000, promClient = client } = opts;
+  const { interval = 60000, promClient = client, metricsPrefix = '' } = opts;
 
   const QUEUE_NAME_LABEL = 'queue_name';
   const QUEUE_PREFIX_LABEL = 'queue_prefix';
 
-  const activeMetricName = 'jobs_active_total';
-  const waitingMetricName = 'jobs_waiting_total';
-  const completedMetricName = 'jobs_completed_total';
-  const failedMetricName = 'jobs_failed_total';
-  const delayedMetricName = 'jobs_delayed_total';
-  const durationMetricName = 'jobs_duration_milliseconds';
+  const activeMetricName = `${metricsPrefix}jobs_active_total`;
+  const waitingMetricName = `${metricsPrefix}jobs_waiting_total`;
+  const completedMetricName = `${metricsPrefix}jobs_completed_total`;
+  const failedMetricName = `${metricsPrefix}jobs_failed_total`;
+  const delayedMetricName = `${metricsPrefix}jobs_delayed_total`;
+  const durationMetricName = `${metricsPrefix}jobs_duration_milliseconds`;
 
   const completedMetric = new promClient.Gauge({
     name: completedMetricName,
